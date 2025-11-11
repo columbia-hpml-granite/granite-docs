@@ -29,6 +29,16 @@ granite-docs/
 
 ## Getting Started
 
+### Prerequisites
+
+- **Node.js 20 or higher** (Docusaurus 3.9 requirement)
+- npm (comes with Node.js)
+
+Check your version:
+```bash
+node --version  # Should be v20.0.0 or higher
+```
+
 ### Installation
 
 ```bash
