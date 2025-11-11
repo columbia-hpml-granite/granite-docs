@@ -131,7 +131,6 @@ Before first deployment:
    - Edit `docusaurus.config.js`
    - Update `url`, `baseUrl`, `organizationName`, and `projectName`
 
-For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## Documentation
 
