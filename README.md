@@ -1,5 +1,7 @@
 # Granite Docs
 
+![Deploy Status](https://github.com/your-org/granite-docs/actions/workflows/deploy.yml/badge.svg)
+
 Technical documentation for Columbia University High Performance Machine Learning Projects in Collaboration with IBM Research.
 
 ## Project Structure
@@ -76,15 +78,60 @@ Edit `docusaurus.config.js` to update:
 
 Edit `docs/intro.md` to update the main landing page content.
 
-## Deployment
+### Adding Images
 
-To deploy to GitHub Pages:
+Images are organized in `static/img/` directory:
 
-```bash
-npm run deploy
+- `architecture/` - Architecture diagrams
+- `results/` - Performance charts and graphs
+- `diagrams/` - General diagrams
+- `screenshots/` - Screenshots
+- `weekly/weekN/` - Weekly update specific images
+
+**Usage in markdown:**
+```markdown
+![Description](/img/weekly/week2/chart-name.png)
 ```
 
-Make sure to update the `organizationName` and `projectName` in `docusaurus.config.js` before deploying.
+See `static/img/README.md` for detailed guidelines.
+
+## Deployment
+
+This site automatically deploys to GitHub Pages via GitHub Actions when changes are pushed to the `main` branch.
+
+### Automatic Deployment (Recommended)
+
+Simply push to the `main` branch:
+
+```bash
+git add .
+git commit -m "Your commit message"
+git push origin main
+```
+
+The site will automatically build and deploy. Check the **Actions** tab to monitor deployment progress.
+
+### Manual Deployment
+
+You can also trigger deployment manually:
+
+1. Go to the **Actions** tab in your repository
+2. Select "Deploy to GitHub Pages"
+3. Click **Run workflow**
+
+### Setup Requirements
+
+Before first deployment:
+
+1. **Enable GitHub Pages:**
+   - Go to **Settings** → **Pages**
+   - Set source to **GitHub Actions**
+
+2. **Update Configuration:**
+   - Edit `docusaurus.config.js`
+   - Update `url`, `baseUrl`, `organizationName`, and `projectName`
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## Documentation
 

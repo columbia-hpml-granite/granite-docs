@@ -1,12 +1,12 @@
 const config = {
   title: "Granite Docs",
   tagline: "Columbia University High Performance Machine Learning Projects in Collaboration with IBM Research",
-  favicon: "img/favicon.ico",
+  favicon: "image/favicon.ico",
 
-  url: "https://your-org.github.io",
-  baseUrl: "/",
+  url: "https://columbia-hpml-granite.github.io",
+  baseUrl: "/docs/",
 
-  organizationName: "your-org",
+  organizationName: "columbia-hpml-granite",
   projectName: "granite-docs",
 
   onBrokenLinks: "warn",
