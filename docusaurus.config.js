@@ -4,7 +4,7 @@ const config = {
   favicon: "image/favicon.ico",
 
   url: "https://columbia-hpml-granite.github.io",
-  baseUrl: "/docs/",
+  baseUrl: "/granite-docs/",
 
   organizationName: "columbia-hpml-granite",
   projectName: "granite-docs",
