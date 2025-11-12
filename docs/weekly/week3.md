@@ -18,6 +18,16 @@ hide_title: true
 
 **Project Objective:** Integrate the Granite Speech model into IBM's Foundation Model Stack so it can run end-to-end under torch.compile, evaluate its performance against eager execution, and document what makes a speech model compile-efficient inside FMS.
 
+**Forked Repository:** [columbia-hpml-granite/foundation-model-stack](https://github.com/columbia-hpml-granite/foundation-model-stack/tree/granite-speech)
+
+**Branch:** `granite-speech`
+
+**Key Files:**
+- Conformer Implementation: [`fms/models/conformer.py`](https://github.com/columbia-hpml-granite/foundation-model-stack/blob/granite-speech/fms/models/conformer.py)
+- Validation Tests: [`tests/models/test_conformer.py`](https://github.com/columbia-hpml-granite/foundation-model-stack/blob/granite-speech/tests/models/test_conformer.py)
+- Baseline Performance Tests: [`tests/models/hf_equivalence/test_conformer_simple.py`](https://github.com/columbia-hpml-granite/foundation-model-stack/blob/granite-speech/tests/models/hf_equivalence/test_conformer_simple.py)
+
+
 ---
 
 ## Overall Progress Summary
@@ -184,12 +194,59 @@ Direct performance comparison is not possible due to different input modalities.
 2. Component-level validation (shapes, gradients, numerical stability)
 3. Future: Compare with other spectrogram-based encoders (e.g., Whisper encoder)
 
-### Repository Links or Pull Requests:
+### Conformer Testing Strategy
 
-- Conformer Implementation: `foundation-model-stack/fms/models/conformer.py`
-- Validation Tests: `foundation-model-stack/tests/models/test_conformer.py`
-- Baseline Performance Tests: `foundation-model-stack/tests/models/hf_equivalence/test_conformer_simple.py`
-- Branch: `granite-speech`
+Our testing approach validates three critical dimensions for production ML systems:
+
+```mermaid
+graph TB
+    A[Conformer Implementation] --> B[Correctness Tests]
+    A --> C[Architectural Tests]
+    A --> D[Performance Tests]
+
+    B --> B1[Does the code work?]
+    C --> C1[Does the model learn?]
+    D --> D1[Is it fast enough?]
+
+    B1 --> E[test_conformer.py<br/>28 tests]
+    C1 --> E
+    D1 --> F[test_conformer_simple.py<br/>3 tests]
+
+    style B fill:#e1f5e1
+    style C fill:#e1e5f5
+    style D fill:#f5e1e1
+```
+
+**1. Correctness Tests** (`test_conformer.py` - 20 tests)
+*"Does the implementation work as software?"*
+
+Validates:
+- **Numerical Stability**: No NaN/Inf propagation, bounded outputs, gradient flow
+- **Architectural Integrity**: All submodules present, shape preservation, sequence length maintained
+- **Production Requirements**: Variable sequence lengths, batch independence, serialization, deterministic inference
+- **FMS Integration**: ModelConfig patterns, registry compatibility, training pipeline support
+
+**2. Architectural Tests** (`test_conformer.py` - 8 tests)
+*"Does the model learn meaningful representations?"*
+
+Tests the core hypothesis that Conformer combines local (conv) + global (attention) processing:
+- **Representation Quality**: Collapse detection (different inputs → different embeddings), discriminability (L2 distance > 0.1)
+- **Positional Encoding**: Sequence permutation changes output (validates Shaw's relative embeddings)
+- **Conformer-Specific Properties**: Convolution responds to local patterns, attention propagates globally
+- **Architectural Stability**: Residual scaling prevents explosion, length generalization across [20, 50, 100, 200]
+- **Attention Structure**: Non-uniform patterns (entropy < 99% max)
+
+**3. Performance Tests** (`test_conformer_simple.py` - 3 tests)
+*"Is it fast enough?"*
+
+Measures:
+- Forward pass latency and throughput
+- Performance regression detection
+- Baseline metrics for optimization
+
+**Key Principle**: A model can pass functional tests but still be scientifically useless. All three dimensions are essential for production ML systems.
+
+**Test Results**: All 31 tests passed successfully.
 
 ### Relevant Papers / References:
 
