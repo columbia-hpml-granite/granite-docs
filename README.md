@@ -12,7 +12,7 @@ This repository uses Docusaurus to serve technical documentation with a markdown
 granite-docs/
 ├── docs/                    # Documentation files
 │   ├── intro.md            # Homepage (markdown)
-│   └── weekly/             # Weekly update reports
+│   └── Weekly/             # Weekly update reports
 │       ├── _template.md    # Template for weekly updates
 │       ├── week1.md        # Week 1 update
 │       ├── week2.md        # Week 2 update
@@ -63,7 +63,7 @@ This command generates static content into the `build` directory and can be serv
 
 ## Weekly Updates
 
-Weekly updates follow a structured template located at `docs/weekly/_template.md`. Each week's update should include:
+Weekly updates follow a structured template located at `docs/Weekly/_template.md`. Each week's update should include:
 
 1. **Project Overview** - Team and objective information
 2. **Overall Progress Summary** - Milestones and deliverables

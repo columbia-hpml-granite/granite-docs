@@ -68,35 +68,35 @@ const config = {
             items: [
               {
                 label: "Week 1",
-                to: "/weekly/week1",
+                to: "/Weekly/week1",
               },
               {
                 label: "Week 2",
-                to: "/weekly/week2",
+                to: "/Weekly/week2",
               },
               {
                 label: "Week 3",
-                to: "/weekly/week3",
+                to: "/Weekly/week3",
               },
               {
                 label: "Week 4",
-                to: "/weekly/week4",
+                to: "/Weekly/week4",
               },
               {
                 label: "Week 5",
-                to: "/weekly/week5",
+                to: "/Weekly/week5",
               },
               {
                 label: "Week 6",
-                to: "/weekly/week6",
+                to: "/Weekly/week6",
               },
               {
                 label: "Week 7",
-                to: "/weekly/week7",
+                to: "/Weekly/week7",
               },
               {
                 label: "Week 8",
-                to: "/weekly/week8",
+                to: "/Weekly/week8",
               },
             ],
           },

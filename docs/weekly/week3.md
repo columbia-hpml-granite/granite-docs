@@ -3,7 +3,7 @@ title: Week 3
 hide_title: true
 ---
 
-## 1. Project Overview
+## Project Overview
 
 **Project Title:** Granite Speech Integration in the Foundation Model Stack (FMS)
 
@@ -11,16 +11,16 @@ hide_title: true
 
 **Student Team Members:**
 
-- Aneesh
-- Geonsik
-- In Keun
-- Zach
+- [Aneesh Durai](https://github.com/aneeshdurai)
+- [Geonsik Moon](https://github.com/gsmoon97)
+- [In Keun Kim](https://github.com/nearKim)
+- [Zachary Zusin](https://github.com/zacharyzusin)
 
 **Project Objective:** Integrate the Granite Speech model into IBM's Foundation Model Stack so it can run end-to-end under torch.compile, evaluate its performance against eager execution, and document what makes a speech model compile-efficient inside FMS.
 
 ---
 
-## 2. Overall Progress Summary
+## Overall Progress Summary
 
 **% Completion:** 40%
 
@@ -41,7 +41,7 @@ hide_title: true
 
 ---
 
-## 3. Tasks Completed This Week
+## Tasks Completed This Week
 
 | Task                           | Description                                                                                        | Outcome / Results                                                                  | Responsible Member |
 | ------------------------------ | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------ |
@@ -57,7 +57,7 @@ hide_title: true
 
 ---
 
-## 4. Plans for Next Week
+## Plans for Next Week
 
 | Planned Task                           | Expected Outcome                                                       | Assigned To |
 | -------------------------------------- | ---------------------------------------------------------------------- | ----------- |
@@ -68,7 +68,7 @@ hide_title: true
 
 ---
 
-## 5. Challenges / Blockers
+## Challenges / Blockers
 
 | Issue                                     | Description                                                                                                                                                           | Impact                                                                       | Proposed Solution / Support Needed                                                                                                                                                                         |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -77,7 +77,7 @@ hide_title: true
 
 ---
 
-## 6. Individual Contributions (This Week)
+## Individual Contributions (This Week)
 
 | Student Name | Key Contributions                                                                                    | Hours Contributed | Notes                                                    |
 | ------------ | ---------------------------------------------------------------------------------------------------- | ----------------- | -------------------------------------------------------- |
@@ -88,7 +88,7 @@ hide_title: true
 
 ---
 
-## 7. Feedback / Requests from Supervisors
+## Feedback / Requests from Supervisors
 
 **Specific Questions / Feedback Needed:**
 
@@ -102,7 +102,7 @@ hide_title: true
 
 ---
 
-## 8. Appendix
+## Appendix
 
 ### FMS Conformer Architecture
 

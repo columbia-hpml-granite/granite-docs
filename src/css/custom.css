@@ -28,3 +28,18 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/* Automatic numbering for H2 headings */
+.markdown {
+  counter-reset: h2-counter;
+}
+
+.markdown h2 {
+  counter-increment: h2-counter;
+}
+
+.markdown h2::before {
+  content: counter(h2-counter) ". ";
+  color: var(--ifm-color-primary);
+  font-weight: bold;
+}

@@ -3,7 +3,7 @@ title: Week X
 hide_title: true
 ---
 
-## 1. Project Overview
+## Project Overview
 
 **Project Title:** [Insert Project Title]
 
@@ -19,7 +19,7 @@ hide_title: true
 
 ---
 
-## 2. Overall Progress Summary
+## Overall Progress Summary
 
 **% Completion:** [X%]
 
@@ -37,7 +37,7 @@ hide_title: true
 
 ---
 
-## 3. Tasks Completed This Week
+## Tasks Completed This Week
 
 | Task | Description | Outcome / Results | Responsible Member |
 |------|-------------|-------------------|-------------------|
@@ -47,7 +47,7 @@ hide_title: true
 
 ---
 
-## 4. Plans for Next Week
+## Plans for Next Week
 
 | Planned Task | Expected Outcome | Assigned To |
 |--------------|------------------|-------------|
@@ -57,7 +57,7 @@ hide_title: true
 
 ---
 
-## 5. Challenges / Blockers
+## Challenges / Blockers
 
 | Issue | Description | Impact | Proposed Solution / Support Needed |
 |-------|-------------|--------|-----------------------------------|
@@ -67,7 +67,7 @@ hide_title: true
 
 ---
 
-## 6. Individual Contributions (This Week)
+## Individual Contributions (This Week)
 
 | Student Name | Key Contributions | Hours Contributed | Notes |
 |--------------|------------------|-------------------|-------|
@@ -78,7 +78,7 @@ hide_title: true
 
 ---
 
-## 7. Feedback / Requests from Supervisors
+## Feedback / Requests from Supervisors
 
 **Specific Questions / Feedback Needed:**
 - [Question/Feedback Item 1]
@@ -90,7 +90,7 @@ hide_title: true
 
 ---
 
-## 8. Appendix (Optional)
+## Appendix (Optional)
 
 **Screenshots / Figures / Logs / Charts:**
 [Insert relevant visual materials]
