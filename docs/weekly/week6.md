@@ -36,7 +36,7 @@ hide_title: true
 - Updated Conformer configuration (10 conformer blocks)
 - HF-to-FMS equivalence test suite
 - Bug fixes for multimodal forward path
-- Gap analysis documentation
+- [Gap analysis documentation](https://github.com/columbia-hpml-granite/foundation-model-stack/blob/granite-speech/gap-analysis.md)
 - Reference HF end-to-end test code (temporary)
 
 ---
@@ -64,8 +64,8 @@ hide_title: true
 - Ensures proper alignment for weight conversion and equivalence testing
 
 **Files Modified:**
-- [fms/models/conformer.py:1](fms/models/conformer.py:1) - Configuration update
-- [fms/models/granite_speech.py:1](fms/models/granite_speech.py:1) - Integration update
+- [fms/models/conformer.py:1](https://github.com/columbia-hpml-granite/foundation-model-stack/blob/granite-speech/fms/models/conformer.py) - Configuration update
+- [fms/models/granite_speech.py:1](https://github.com/columbia-hpml-granite/foundation-model-stack/blob/granite-speech/fms/models/granite_speech.py) - Integration update
 
 ### 2. Multimodal Forward Path Improvements
 
