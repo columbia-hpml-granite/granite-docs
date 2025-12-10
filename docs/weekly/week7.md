@@ -105,7 +105,10 @@ Remaining Gaps:
 
 | Issue | Description | Impact | Proposed Solution / Support Needed |
 |-------|-------------|--------|-----------------------------------|
-| No blockers | All major implementation work completed | N/A | N/A |
+| Custom Component Necessity (RESOLVED) | FMS standard components incompatible with HF weight structure (LayerNorm inside FFN modules) | Initially attempted to adapt FMS components, blocked by structural incompatibility | Implemented custom components (ConformerFeedForward, ConformerAttention, ConformerConvModule) matching HF exactly |
+| Token Count Mismatch (RESOLVED) | Initial processor caused `ValueError: Mismatch between audio positions and vectors` | Runtime errors during audio embedding merge | Implemented `_get_num_audio_features()` accounting for windowing and downsampling |
+| Placeholder Mechanism (RESOLVED) | Directly expanding `<|audio|>` to multiple copies breaks tokenizers | Tokenizer treats repeated special tokens incorrectly | Used placeholder mechanism (LLaVA-inspired): `<|audio|>` → `<placeholder>` × N → tokenize → replace IDs |
+| No remaining blockers | All major implementation work completed | N/A | N/A |
 
 ---
 
@@ -135,20 +138,47 @@ Remaining Gaps:
 ### Key Implementation Details
 
 **GraniteSpeechFeatureExtractor:**
-- Converts raw audio waveforms to mel-spectrogram features
-- Output shape: `(batch, mel_seq_len, 160)` where 160 = n_mels * 2
+- Converts raw audio waveforms to mel-spectrogram features using pure PyTorch/torchaudio
+- Output shape: `(batch, mel_seq_len, 160)` where 160 = n_mels * 2 (frame stacking)
 - Handles variable-length audio with proper padding and masking
+- Zero HuggingFace dependencies - removed all transformers library imports
+- Mel-spectrogram pipeline: Raw Audio → MelSpectrogram (80 bins) → Log-Mel Normalization → Frame Stacking (2×) → 160-dim features
 
 **GraniteSpeechProcessor:**
 - Combines feature extraction with tokenization
 - Expands `<|audio|>` placeholder tokens to match projected audio feature count
-- Calculates audio embed sizes for model forward pass
+- Calculates audio embed sizes accounting for full pipeline (mel → encoder → projector)
+- Uses placeholder mechanism (similar to LLaVA image tokens) to prevent tokenizer issues with repeated special tokens
+- Returns comprehensive output: `input_ids`, `attention_mask`, `input_features`, `input_features_mask`
 
 **LoRaAdapter Integration:**
 - Optional PEFT dependency for LoRA adapter support
 - `load_adapter(path)` - Load LoRA weights onto decoder
 - `set_adapter(adapter_name)` - Toggle adapter on/off
 - `has_lora_adapter` config flag for runtime behavior
+
+### Key Design Decisions and Rationale
+
+**1. Conformer Encoder - Custom Components:**
+- **Why custom?** HuggingFace weight structure requires LayerNorm inside FFN modules (not present in standard FMS components)
+- **Shaw's Relative Positional Embeddings:** Better for variable-length audio than absolute positions; precomputed distances registered as buffer
+- **Mid-layer CTC Supervision:** Auxiliary loss at block 8 provides gradient signal earlier in network, improves acoustic modeling
+- **Half-step Residuals:** 0.5× scaling for feed-forward modules (two per block: 0.5 + 0.5 = 1.0), 1.0× for attention/conv
+- **No Temporal Downsampling:** Maintains full resolution; compression handled by Q-Former (separation of concerns)
+
+**2. Q-Former Projector - Module vs Model Placement:**
+- **Placed in `fms/modules/`** (not `fms/models/`) based on functional role
+- **Key insight:** Functional role (connector/adapter) trumps structural similarity (model-like code)
+- **Cannot perform standalone task** (unlike Conformer which can do ASR via CTC)
+- **Window-based downsampling:** 15× compression (500 frames → ~102 queries with default config)
+- **BLIP-2 alignment:** Learnable queries with N(0,1) initialization, input normalization before Q-Former layers
+- **Code cleanup:** Removed 75 lines of factory functions (~11% reduction) to align with FMS module patterns
+
+**3. Feature Extractor & Processor - Zero Dependencies:**
+- **Removed all HuggingFace dependencies:** No `transformers.feature_extraction_utils`, `transformers.processing_utils`
+- **Pure PyTorch implementation:** Only uses `torch`, `torchaudio`, `numpy`
+- **Placeholder mechanism rationale:** Prevents tokenizer from treating repeated `<|audio|>` tokens as special
+- **Token count calculation:** Accounts for mel extraction, encoder stacking, and projector windowing
 
 ### Test Coverage Summary
 
@@ -173,4 +203,42 @@ Remaining Gaps:
 - Compares outputs at: encoder, projector, first decoder block, final logits
 - Enables component-level debugging for weight mapping issues
 - Reports shape and numerical differences for each component
+
+### Compression Ratios and Pipeline Flow
+
+**Audio Processing Pipeline:**
+```
+Raw Audio (16kHz) → Mel Features → Encoder → Projector → Decoder
+    16000 samples      100 frames   100 embeds   ~7 tokens   text
+         ↓ 160×           ↓ 1×         ↓ 15×       ↓ generation
+    10 ms/sample      10 ms/frame   10 ms/embed  ~150 ms/token
+```
+
+**Overall compression:** 16000 samples → ~7 tokens ≈ 2285× compression
+
+**Component-level transformations:**
+- **FeatureExtractor:** (B, 16000) → (B, 50, 160) - mel extraction + frame stacking
+- **ConformerEncoder:** (B, 50, 160) → (B, 50, 1024) - acoustic feature extraction
+- **SpeechProjector:** (B, 50, 1024) → (B, ~10, 2048) - 15× temporal compression via windowing
+- **GraniteDecoder:** (B, ~10, 2048) → (B, ~10, 49152) - language modeling
+
+### Weight Conversion Pipeline
+
+**Complete HF → FMS adapter pipeline:**
+```python
+serialization.register_adapter(
+    "granite_speech",
+    "hf",
+    [
+        "hf_to_fms_names",      # Name mapping
+        "split_kv_weights",      # Split fused K/V projections
+        "weight_fusion",         # Decoder weight fusion
+    ],
+)
+```
+
+**Key weight mappings:**
+- **Conformer:** `encoder.layers.{i}` → `encoder.blocks.{i}`, relative position embeddings split (K/V)
+- **Projector:** BLIP-2 Q-Former naming, `projector.query` → `projector.query_embeds`
+- **Decoder:** Reuses Granite adapter, supports LoRA weights when available
 
