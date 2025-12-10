@@ -65,6 +65,23 @@ hide_title: true
 | Generation Tests | Fixed generation tests with proper use_cache handling | Validates greedy and sampling generation modes | 
 | Remove xfails | Removed all pytest.mark.xfail decorators as implementations are complete | All 50+ tests now passing |
 
+**Test Migration Report Summary**
+
+| Category               | Coverage | Status                           |
+  |------------------------|----------|----------------------------------|
+| Model Unit Tests       | 100%     | Complete                         |
+| Processor Unit Tests   | 89%      | Missing save/load only           |
+| FeatureExtractor Tests | 12 tests | FMS-specific                     |
+| Generation Tests       | ~55%     | Core cases covered               |
+| LoRA Adapter Tests     | 100%     | Fully implemented (13 tests)     |
+| E2E Component Tests    | 6 tests  | Shape validation with real audio |
+| HF Equivalence         | 1 test   | Numerical comparison             |
+
+Remaining Gaps:
+- No pretrained model integration test (exact transcription validation)
+- No processor save/load test
+- Beam search not supported (by design)
+
 ---
 
 ## Plans for Next Week
