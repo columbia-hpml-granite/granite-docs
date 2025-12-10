@@ -33,6 +33,8 @@ hide_title: true
 - Added comprehensive E2E tests with real audio from LibriSpeech dataset (Not tested for now)
 - Implemented LoRaAdapter feature for Granite Speech model
 - Migrated existing tests from HF and fixed all test bugs - all tests now passing or skipping (GPU required tests)
+- Added `torch.compile` parity tests comparing compiled HF vs compiled FMS performance
+- Added activation parity tests using module hooks for component-level debugging
 
 **Deliverables Submitted:**
 
@@ -41,6 +43,8 @@ hide_title: true
 - LoRaAdapter integration for FMS Granite Speech
 - E2E test suite with real audio validation
 - Generation tests for text and audio inputs
+- `torch.compile` end-to-end parity test (`test_granite_speech_torch_compile.py`)
+- Activation parity test with module hooks (`test_granite_speech_activation_parity.py`)
 
 ---
 
@@ -62,8 +66,10 @@ hide_title: true
 |------|-------------|-------------------|
 | E2E Real Audio Tests | Added `test_fms_e2e_with_real_audio` using LibriSpeech dataset | Validates full pipeline with real audio samples |
 | E2E Batch Audio Tests | Added `test_fms_e2e_with_real_audio_batch` for multiple audio samples | Tests batched processing with different audio lengths |
-| Generation Tests | Fixed generation tests with proper use_cache handling | Validates greedy and sampling generation modes | 
+| Generation Tests | Fixed generation tests with proper use_cache handling | Validates greedy and sampling generation modes |
 | Remove xfails | Removed all pytest.mark.xfail decorators as implementations are complete | All 50+ tests now passing |
+| torch.compile Parity Test | Created `test_granite_speech_torch_compile.py` comparing compiled HF vs FMS | Validates compile behavior, performance timing, and full-graph correctness |
+| Activation Parity Test | Created `test_granite_speech_activation_parity.py` using `nn.Module.register_forward_hook` | Compares encoder/projector/decoder outputs for component-level debugging |
 
 **Test Migration Report Summary**
 
@@ -75,7 +81,7 @@ hide_title: true
 | Generation Tests       | ~55%     | Core cases covered               |
 | LoRA Adapter Tests     | 100%     | Fully implemented (13 tests)     |
 | E2E Component Tests    | 6 tests  | Shape validation with real audio |
-| HF Equivalence         | 1 test   | Numerical comparison             |
+| HF Equivalence         | 3 tests  | Numerical + activation + compile parity |
 
 Remaining Gaps:
 - No pretrained model integration test (exact transcription validation)
@@ -109,7 +115,7 @@ Remaining Gaps:
 |--------------|------------------|-------------------|-------|
 | Geonsik | Implemented GraniteSpeechFeatureExtractor and GraniteSpeechProcessor, fixed generation tests | 12 hours | Core audio processing pipeline complete |
 | In Keun | Added LoRaAdapter feature, created E2E real audio tests, fixed test bugs | 10 hours | LoRA integration ready for fine-tuning workflows |
-| Aneesh | Implemented audio token calculation logic, added batch E2E tests | 9 hours | Proper audio-to-token mapping validated |
+| Aneesh | Created torch.compile parity test and activation parity test using module hooks | 10 hours | Validates compiled HF vs FMS + component-level debugging |
 | Zach | Fixed multiple test bugs, removed xfails, validated test suite | 8 hours | All tests now passing |
 
 ---
@@ -118,7 +124,7 @@ Remaining Gaps:
 
 **Specific Questions / Feedback Needed:**
 
-- Final code review session? 
+- Final code review session?
 
 
 ---
@@ -149,7 +155,22 @@ Remaining Gaps:
 | Test Category | Test Count | Status  |
 |---------------|------------|---------|
 | Component Tests | 20+ | Passing |
-| E2E Tests | 5+ | Skipped |
+| E2E Tests | 5+ | Skipped (requires GPU) |
 | Generation Tests | 10+ | Passing |
 | Integration Tests | 15+ | Passing |
+| HF Equivalence Tests | 3 | Skipped (requires GPU) |
+
+### New HF Equivalence Tests
+
+**torch.compile Parity Test (`test_granite_speech_torch_compile.py`):**
+- Uses `torch.compile(mode="max-autotune")` on both HF and FMS models
+- Compares compiled logits with `atol=1e-3, rtol=1e-3`
+- Measures and reports timing for compiled HF vs FMS
+- Validates full-graph correctness under compilation
+
+**Activation Parity Test (`test_granite_speech_activation_parity.py`):**
+- Uses `nn.Module.register_forward_hook` to capture intermediate activations
+- Compares outputs at: encoder, projector, first decoder block, final logits
+- Enables component-level debugging for weight mapping issues
+- Reports shape and numerical differences for each component
 
