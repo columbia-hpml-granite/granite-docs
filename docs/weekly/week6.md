@@ -173,11 +173,11 @@ return projected_states  # Always (batch, 32, decoder_dim)
 ## Plans for Next Week
 
 | Planned Task                          | Expected Outcome                                                    | Assigned To  |
-| ------------------------------------- | ------------------------------------------------------------------- | ------------ | --------- | ------------- |
+| ------------------------------------- | ------------------------------------------------------------------- | ------------ |
 | **Fix Projector Config Issues**       | Add `window_size` field, fix query shape, add proper initialization | Geonsik Moon |
 | **Implement Window-Based Processing** | Add windowed attention processing to match HF behavior              | Geonsik Moon |
 | **Implement Feature Extractor**       | Create audio-to-mel-spectrogram conversion module                   | In Keun Kim  |
-| **Implement Processor Module**        | Create token expansion handler for `<                               | audio        | >` tokens | Zachary Zusin |
+| **Implement Processor Module**        | Create token expansion handler for `<\|audio\|>` tokens             | Zachary Zusin |
 | **LoRA Integration Research**         | Investigate LoRA adapter requirements and integration approach      | Aneesh Durai |
 | **KV Cache Testing**                  | Validate and optimize KV cache handling for generation              | Aneesh Durai |
 | **End-to-End Integration Testing**    | Run complete wav → txt pipeline tests                               | All          |
