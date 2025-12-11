@@ -107,7 +107,7 @@ Remaining Gaps:
 |-------|-------------|--------|-----------------------------------|
 | Custom Component Necessity (RESOLVED) | FMS standard components incompatible with HF weight structure (LayerNorm inside FFN modules) | Initially attempted to adapt FMS components, blocked by structural incompatibility | Implemented custom components (ConformerFeedForward, ConformerAttention, ConformerConvModule) matching HF exactly |
 | Token Count Mismatch (RESOLVED) | Initial processor caused `ValueError: Mismatch between audio positions and vectors` | Runtime errors during audio embedding merge | Implemented `_get_num_audio_features()` accounting for windowing and downsampling |
-| Placeholder Mechanism (RESOLVED) | Directly expanding `<|audio|>` to multiple copies breaks tokenizers | Tokenizer treats repeated special tokens incorrectly | Used placeholder mechanism (LLaVA-inspired): `<|audio|>` → `<placeholder>` × N → tokenize → replace IDs |
+| Placeholder Mechanism (RESOLVED) | Directly expanding `<\|audio\|>` to multiple copies breaks tokenizers | Tokenizer treats repeated special tokens incorrectly | Used placeholder mechanism (LLaVA-inspired): `<\|audio\|>` → `<\|placeholder\|>` × N → tokenize → replace IDs |
 | No remaining blockers | All major implementation work completed | N/A | N/A |
 
 ---
@@ -146,7 +146,7 @@ Remaining Gaps:
 
 **GraniteSpeechProcessor:**
 - Combines feature extraction with tokenization
-- Expands `<|audio|>` placeholder tokens to match projected audio feature count
+- Expands `<\|audio\|>` placeholder tokens to match projected audio feature count
 - Calculates audio embed sizes accounting for full pipeline (mel → encoder → projector)
 - Uses placeholder mechanism (similar to LLaVA image tokens) to prevent tokenizer issues with repeated special tokens
 - Returns comprehensive output: `input_ids`, `attention_mask`, `input_features`, `input_features_mask`
@@ -177,7 +177,7 @@ Remaining Gaps:
 **3. Feature Extractor & Processor - Zero Dependencies:**
 - **Removed all HuggingFace dependencies:** No `transformers.feature_extraction_utils`, `transformers.processing_utils`
 - **Pure PyTorch implementation:** Only uses `torch`, `torchaudio`, `numpy`
-- **Placeholder mechanism rationale:** Prevents tokenizer from treating repeated `<|audio|>` tokens as special
+- **Placeholder mechanism rationale:** Prevents tokenizer from treating repeated `<\|audio\|>` tokens as special
 - **Token count calculation:** Accounts for mel extraction, encoder stacking, and projector windowing
 
 ### Test Coverage Summary
