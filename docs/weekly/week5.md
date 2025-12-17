@@ -8,10 +8,12 @@ hide_title: true
 **Project Title:** Granite Speech Integration in Foundation Model Stack (FMS)
 
 **Faculty Supervisors:**
+
 - Dr. Kaoutar El Maghraoui
 - Dr. Rashed Bhatti
 
 **Student Team Members:**
+
 - [Aneesh Durai](https://github.com/aneeshdurai)
 - [Geonsik Moon](https://github.com/gsmoon97)
 - [In Keun Kim](https://github.com/nearKim)
@@ -26,6 +28,7 @@ hide_title: true
 **% Completion:** 75%
 
 **Key Milestones Achieved This Week:**
+
 - ✅ Complete Speech Projector Q-Former implementation (633 lines)
 - ✅ CTC mid-layer supervision added to Conformer Encoder
 - ✅ Full Granite Speech model integration (encoder + projector + decoder)
@@ -34,6 +37,7 @@ hide_title: true
 - ✅ All 22 end-to-end integration tests passing
 
 **Deliverables Submitted:**
+
 - Complete Speech Projector module (`fms/modules/projector.py`)
 - Enhanced Conformer Encoder with CTC (`fms/models/conformer.py`)
 - Granite Speech model integration (`fms/models/granite_speech.py` )
@@ -43,15 +47,15 @@ hide_title: true
 
 ## Tasks Completed This Week
 
-| Task | Description | Outcome / Results | Responsible Member |
-|------|-------------|-------------------|-------------------|
-| **Complete Projector Implementation** | Implemented all Q-Former components: QFormerSelfAttention, QFormerCrossAttention, QFormerFeedForward, QFormerLayer | 633 lines, fully functional with learnable queries, multi-head attention, and feed-forward networks | Geonsik Moon |
-| **CTC Mid-Layer Supervision** | Added CTC output layers and mid-layer feedback to ConformerEncoder | `use_ctc` config option, `out`/`out_mid` linear layers, softmax feedback at layer `num_layers // 2` | Geonsik Moon |
-| **Granite Speech Model Integration** | Connected Conformer encoder → Q-Former projector → Granite decoder into unified forward path | `get_audio_features()`, `get_merged_audio_embeddings()`, multimodal `forward()` with labels support | In Keun Kim |
-| **HF Weight Conversion** | Implemented HuggingFace → FMS weight name mapping and K-V weight splitting | `_hf_to_fms_names()`, `_split_kv_weights()`, registered as FMS serialization adapter | In Keun Kim |
-| **HF-Aligned Projector Tests** | Created comprehensive test suite following HuggingFace patterns | 401 lines, 21 tests covering window processing, query initialization, gradient flow | In Keun Kim |
-| **HF-Aligned Encoder Tests** | Created CTC-focused test suite for Conformer | 434 lines, 25 tests covering CTC configuration, mid-layer logic, attention distances | In Keun Kim |
-| **End-to-End Model Tests** | Created integration tests for complete Granite Speech model | 486 lines, 22 tests covering forward pass, gradient flow, weight conversion, stability | In Keun Kim |
+| Task                                  | Description                                                                                                        | Outcome / Results                                                                                   | Responsible Member |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | ------------------ |
+| **Complete Projector Implementation** | Implemented all Q-Former components: QFormerSelfAttention, QFormerCrossAttention, QFormerFeedForward, QFormerLayer | 633 lines, fully functional with learnable queries, multi-head attention, and feed-forward networks | Geonsik Moon       |
+| **CTC Mid-Layer Supervision**         | Added CTC output layers and mid-layer feedback to ConformerEncoder                                                 | `use_ctc` config option, `out`/`out_mid` linear layers, softmax feedback at layer `num_layers // 2` | Geonsik Moon       |
+| **Granite Speech Model Integration**  | Connected Conformer encoder → Q-Former projector → Granite decoder into unified forward path                       | `get_audio_features()`, `get_merged_audio_embeddings()`, multimodal `forward()` with labels support | In Keun Kim        |
+| **HF Weight Conversion**              | Implemented HuggingFace → FMS weight name mapping and K-V weight splitting                                         | `_hf_to_fms_names()`, `_split_kv_weights()`, registered as FMS serialization adapter                | In Keun Kim        |
+| **HF-Aligned Projector Tests**        | Created comprehensive test suite following HuggingFace patterns                                                    | 401 lines, 21 tests covering window processing, query initialization, gradient flow                 | In Keun Kim        |
+| **HF-Aligned Encoder Tests**          | Created CTC-focused test suite for Conformer                                                                       | 434 lines, 25 tests covering CTC configuration, mid-layer logic, attention distances                | In Keun Kim        |
+| **End-to-End Model Tests**            | Created integration tests for complete Granite Speech model                                                        | 486 lines, 22 tests covering forward pass, gradient flow, weight conversion, stability              | In Keun Kim        |
 
 ---
 
@@ -60,6 +64,7 @@ hide_title: true
 ### 1. Complete Q-Former Projector (`fms/modules/projector.py`)
 
 **Components Implemented:**
+
 ```python
 class SpeechProjectorConfig(ModelConfig):
     encoder_dim: int = 1024      # Conformer output
@@ -77,6 +82,7 @@ class SpeechProjector(nn.Module):        # Full projector with output projection
 ```
 
 **Architecture Flow:**
+
 ```
 Conformer output (batch, audio_len, 1024)
     ↓
@@ -94,12 +100,14 @@ Projected output (batch, 32, 4096)
 ### 2. CTC Mid-Layer Supervision (`fms/models/conformer.py`)
 
 **Added to ConformerConfig:**
+
 ```python
 output_dim: int = 42      # CTC vocabulary size
 use_ctc: bool = True      # Enable mid-layer CTC
 ```
 
 **Forward Pass Enhancement:**
+
 ```python
 mid_layer = len(self.blocks) // 2
 for idx, block in enumerate(self.blocks, start=1):
@@ -114,6 +122,7 @@ for idx, block in enumerate(self.blocks, start=1):
 ### 3. Granite Speech Integration (`fms/models/granite_speech.py`)
 
 **Key Methods:**
+
 ```python
 def get_audio_features(self, input_features):
     """Encode audio → Project to decoder space."""
@@ -150,6 +159,7 @@ def forward(self, input_ids, input_features, labels=None, ...):
 ### 4. HuggingFace Weight Conversion
 
 **Registered Adapter Steps:**
+
 ```python
 serialization.register_adapter(
     "granite_speech",
@@ -176,7 +186,7 @@ serialization.register_adapter(
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                         GRANITE SPEECH 3.3 8B ARCHITECTURE                       │
+│                         GRANITE SPEECH 3.3 8B ARCHITECTURE                      │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
    Audio Input                    Text Input
@@ -239,9 +249,9 @@ serialization.register_adapter(
 │  └───────────┬─────────────┘  │        │
 │              ▼                │        │
 │     (B, 32, 4096)             │        │
-└───────────────┬───────────────┘        │
-                │                        │
-                ▼                        ▼
+└──────────────┬────────────────┘        │
+               │                         │
+               ▼                         ▼
         ┌───────────────────────────────────────┐
         │         EMBEDDING MERGE               │
         │  ┌─────────────────────────────────┐  │
@@ -256,10 +266,10 @@ serialization.register_adapter(
         │         GRANITE DECODER               │
         │  ┌─────────────────────────────────┐  │
         │  │   Transformer Block ×40         │  │
-        │  │  • RMSNorm                       │  │
+        │  │  • RMSNorm                      │  │
         │  │  • Multi-Head Attention (GQA)   │  │
-        │  │  • RMSNorm                       │  │
-        │  │  • SwiGLU FFN                    │  │
+        │  │  • RMSNorm                      │  │
+        │  │  • SwiGLU FFN                   │  │
         │  └─────────────────────────────────┘  │
         │         (B, 32+S, 4096)               │
         └───────────────────┬───────────────────┘
@@ -279,7 +289,7 @@ serialization.register_adapter(
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                        Q-FORMER PROJECTOR ARCHITECTURE                       │
+│                        Q-FORMER PROJECTOR ARCHITECTURE                      │
 └─────────────────────────────────────────────────────────────────────────────┘
 
     Encoder Hidden States                 Learnable Queries
@@ -289,10 +299,10 @@ serialization.register_adapter(
          │                                      ▼
          │                               (B, 32, 1024)
          │                                      │
-         │    ┌─────────────────────────────────┼─────────────────────────────┐
-         │    │              Q-FORMER LAYER (×2)                              │
-         │    │                                 │                             │
-         │    │                                 ▼                             │
+         │    ┌─────────────────────────────────┼────────────────────────────┐
+         │    │              Q-FORMER LAYER (×2)                             │
+         │    │                                 │                            │
+         │    │                                 ▼                            │
          │    │    ┌────────────────────────────────────────────────┐        │
          │    │    │            SELF-ATTENTION                      │        │
          │    │    │  ┌──────────────────────────────────────────┐  │        │
@@ -352,7 +362,7 @@ serialization.register_adapter(
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────┐
-│                         TENSOR SHAPE TRANSFORMATIONS                        │
+│                         TENSOR SHAPE TRANSFORMATIONS                       │
 └────────────────────────────────────────────────────────────────────────────┘
 
 Component                    Input Shape              Output Shape
@@ -365,7 +375,8 @@ CTC out_mid layer            (B, T, 42)               (B, T, 1024)
 ─────────────────────────────────────────────────────────────────────────────
 Query Embeddings             (1, 32, 1024)            (B, 32, 1024)
 Q-Former Self-Attn           (B, 32, 1024)            (B, 32, 1024)
-Q-Former Cross-Attn          Q:(B,32,1024) K,V:(B,T,1024)  (B, 32, 1024)
+Q-Former Cross-Attn          Q:(B,32,1024)            (B, 32, 1024)
+                             K,V:(B,T,1024)
 Q-Former FFN                 (B, 32, 1024)            (B, 32, 1024)
 Projector Output Proj        (B, 32, 1024)            (B, 32, 4096)
 ─────────────────────────────────────────────────────────────────────────────
@@ -468,17 +479,16 @@ N/A
 
 ## Individual Contributions (This Week)
 
-| Student Name | Key Contributions | Hours Contributed | Notes |
-|--------------|-------------------|-------------------|-------|
-| **In Keun Kim** | Added GraniteSpeechConfig and SpeechProjectorConfig classes. Created basic configuration tests and model instantiation tests. | 5                 | |
-| **Aneesh Durai** | Completed projector.py TODO implementations (QFormerSelfAttention, QFormerCrossAttention forward methods). Created HF to FMS equivalence test suite. | 7                 | |
-| **Geonsik Moon** | Performed performance testing and code validity verification. Established base Q-Former projector interface and architecture design. | 6                 | |
-| **Zachary Zusin** | Integrated full Granite Speech model forward path. Added CTC mid-layer supervision to ConformerEncoder. Implemented HF→FMS weight conversion adapters. Created HF-aligned encoder and end-to-end tests. | 5                 | |
+| Student Name      | Key Contributions                                                                                                                                                                                       | Hours Contributed | Notes |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----- |
+| **In Keun Kim**   | Added GraniteSpeechConfig and SpeechProjectorConfig classes. Created basic configuration tests and model instantiation tests.                                                                           | 5                 |       |
+| **Aneesh Durai**  | Completed projector.py TODO implementations (QFormerSelfAttention, QFormerCrossAttention forward methods). Created HF to FMS equivalence test suite.                                                    | 7                 |       |
+| **Geonsik Moon**  | Performed performance testing and code validity verification. Established base Q-Former projector interface and architecture design.                                                                    | 6                 |       |
+| **Zachary Zusin** | Integrated full Granite Speech model forward path. Added CTC mid-layer supervision to ConformerEncoder. Implemented HF→FMS weight conversion adapters. Created HF-aligned encoder and end-to-end tests. | 5                 |       |
 
 ---
 
 ## Feedback / Requests from Supervisors
-
 
 ---
 
