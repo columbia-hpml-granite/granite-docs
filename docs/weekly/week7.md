@@ -108,7 +108,7 @@ Remaining Gaps:
 | Custom Component Necessity (RESOLVED) | FMS standard components incompatible with HF weight structure (LayerNorm inside FFN modules) | Initially attempted to adapt FMS components, blocked by structural incompatibility | Implemented custom components (ConformerFeedForward, ConformerAttention, ConformerConvModule) matching HF exactly |
 | Token Count Mismatch (RESOLVED) | Initial processor caused `ValueError: Mismatch between audio positions and vectors` | Runtime errors during audio embedding merge | Implemented `_get_num_audio_features()` accounting for windowing and downsampling |
 | Placeholder Mechanism (RESOLVED) | Directly expanding `<\|audio\|>` to multiple copies breaks tokenizers | Tokenizer treats repeated special tokens incorrectly | Used placeholder mechanism (LLaVA-inspired): `<\|audio\|>` → `<\|placeholder\|>` × N → tokenize → replace IDs |
-| No remaining blockers | All major implementation work completed | N/A | N/A |
+| HF Equivalence Tests | Weight loading and non-persistent buffer computation under investigation | Tests skipped | Debugging in progress |
 
 ---
 
