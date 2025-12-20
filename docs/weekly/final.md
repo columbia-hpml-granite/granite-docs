@@ -471,6 +471,7 @@ Technical documentation available in the repository:
 ### Contact Information
 
 **Project Repository**: [columbia-hpml-granite/foundation-model-stack](https://github.com/columbia-hpml-granite/foundation-model-stack/tree/granite-speech)
+
 **Documentation Site**: [columbia-hpml-granite/granite-docs](https://github.com/columbia-hpml-granite/granite-docs)
 
 For questions or issues related to this implementation, please contact the team members via GitHub.
